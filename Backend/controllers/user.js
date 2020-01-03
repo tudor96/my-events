@@ -4,6 +4,8 @@ const {
 } = require('../models')
 const Sequelize = require('sequelize')
 const bcrypt = require("bcryptjs");
+const logService = require("../loggingService.js");
+
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -28,8 +30,10 @@ const login = async (req, res) => {
   }
 
   if (flag) {
+    logService.Publish("LOG-SUCCESS:: Loging user successfuly.");
     res.status(200).send({ id: user.id });
   } else {
+    logService.Publish("LOG-ERROR:: Failed login.");
     res.status(400).send("failed login");
   }
 }
@@ -43,6 +47,7 @@ const findUser = async (req, res) => {
       "fistName",
     ]
   }).then(user => {
+    logService.Publish("LOG-SUCCESS:: Find user.");
     res.status(200).send(user);
   });
 
@@ -67,9 +72,11 @@ const reg = async (req, res) => {
       email,
       "password": cyptPass,
     });
-    res.status(200).send("registered successfully");
+    logService.Publish("LOG-SUCCESS:: Success registring user.");
+    res.status(200).send({id : newUser.id});
 
   } catch (err) {
+    logService.Publish("LOG-ERROR:: Error registring user.");
     res.status(400).json({
       error: err
     });

@@ -47,33 +47,26 @@ export default function RegisterPage(props) {
 
   function authenticationHandler() {
 
-    const url = `http://localhost:4010/api/v1.0/platform/user`;
 
-    axios.post(url, {
-      "firstname": document.getElementById("name").value,
-      "lastname": document.getElementById("surname").value,
-      "email": document.getElementById("email").value,
-      "cnp": document.getElementById("cnp").value,
-      "adresa": document.getElementById("oras").value + document.getElementById("judet").value,
-    }, {
-      headers: {
-          'Access-Control-Allow-Origin': '*',
-      },
-      withCredentials : true
+    const firstName = document.getElementById("firstName").value;
+    const lastName = document.getElementById("lastName").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const payload = {firstName: firstName, lastName, email: email,password:password}
+    const url = "https://my-events-pssc.herokuapp.com/api/user/register";
+
+    fetch(url, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
     })
-    .then(function (response) {
+    .then(response => response.json())
+    .then((response) => {
       UserProfile.setAuth(response);
-      if(response.isAdmin === 0){
-        history.push("/admin");        
-      } else {
-        history.push("/admin");        
-      }
-      alert("Registration made!");
+      console.log("register");
     })
-    .catch(function (error) {
-      console.log(error);
-      alert("Registration failed!");
-    });
+    .catch(err => console.log(err))
 
 
   }
@@ -98,16 +91,15 @@ export default function RegisterPage(props) {
           <GridContainer justify="center">
             <GridItem xs={12} sm={12} md={8}>
               <Card>
-                <CardHeader color="primary">
-                  <h4 className={classes.cardTitleWhite}>Register</h4>
-                  <p className={classes.cardCategoryWhite}>Inregistreaza-te pentru a accesa platforma de votare online.</p>
-                </CardHeader>
+              <CardHeader color="info" className={classes.cardHeader}>
+                    <h4>Register</h4>
+                  </CardHeader>
                 <CardBody>
                   <GridContainer>
-                    <GridItem xs={12} sm={12} md={5}>
+                    <GridItem xs={12} sm={12} md={6}>
                       <CustomInput
-                        labelText="Nume"
-                        id="name"
+                        labelText="First Name"
+                        id="firstName"
                         formControlProps={{
                           fullWidth: true
                         }}
@@ -116,18 +108,18 @@ export default function RegisterPage(props) {
                         }}
                       />
                     </GridItem>
-                    <GridItem xs={12} sm={12} md={3}>
+                    <GridItem xs={12} sm={12} md={6}>
                       <CustomInput
-                        labelText="Prenume"
-                        id="surname"
+                        labelText="Last Name"
+                        id="lastName"
                         formControlProps={{
                           fullWidth: true
                         }}
                       />
                     </GridItem>
-                    <GridItem xs={12} sm={12} md={4}>
+                    <GridItem xs={12} sm={12} md={12}>
                       <CustomInput
-                        labelText="Adresa de email"
+                        labelText="Email"
                         id="email"
                         formControlProps={{
                           fullWidth: true
@@ -136,12 +128,16 @@ export default function RegisterPage(props) {
                     </GridItem>
                   </GridContainer>
                   <GridContainer>
-                    <GridItem xs={12} sm={12} md={6}>
+                    <GridItem xs={12} sm={12} md={12}>
                       <CustomInput
-                        labelText="CNP"
-                        id="cnp"
+                        labelText="Password"
+                        id="password"
                         formControlProps={{
                           fullWidth: true
+                        }}
+                        inputProps={{
+                          type: "password",
+                          autoComplete: "off"
                         }}
                       />
                     </GridItem>
@@ -155,36 +151,7 @@ export default function RegisterPage(props) {
                       />
                     </GridItem> */}
                   </GridContainer>
-                  <GridContainer>
-                    <GridItem xs={12} sm={12} md={4}>
-                      <CustomInput
-                        labelText="Oras"
-                        id="oras"
-                        formControlProps={{
-                          fullWidth: true
-                        }}
-                      />
-                    </GridItem>
-                    <GridItem xs={12} sm={12} md={4}>
-                      <CustomInput
-                        labelText="Judet"
-                        id="judet"
-                        formControlProps={{
-                          fullWidth: true
-                        }}
-                      />
-                    </GridItem>
-                    
-                    {/* <GridItem xs={12} sm={12} md={4}>
-                      <CustomInput
-                        labelText="Postal Code"
-                        id="postal-code"
-                        formControlProps={{
-                          fullWidth: true
-                        }}
-                      />
-                    </GridItem> */}
-                  </GridContainer>
+                 
                   {/* <GridContainer>
                     <GridItem xs={12} sm={12} md={12}>
                       <InputLabel style={{ color: "#AAAAAA" }}>About me</InputLabel>
@@ -206,11 +173,11 @@ export default function RegisterPage(props) {
                   <GridContainer>
                     <GridItem xs={12} sm={12} md={6}>
                       <Link to="/auth/login">
-                        <Button simple color="primary">Am deja cont!</Button>
+                        <Button simple color="info">Login</Button>
                       </Link>
                     </GridItem>
                     <GridItem xs={12} sm={12} md={6}>
-                      <Button color="primary" onClick={authenticationHandler}>Inregistrare.</Button>
+                      <Button color="info" onClick={authenticationHandler}>Register</Button>
                     </GridItem>
                   </GridContainer>
                 </CardFooter>

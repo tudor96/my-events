@@ -18,9 +18,17 @@ var UserProfile = (function() {
   }
 
   var setAuth = function(user){
-    localStorage.setItem("user", user); 
-    localStorage.setItem("id", user.id);
-    window.location.href = `/dashboard/calendar`;
+    if (user !== null){
+      window.location.href = `/dashboard/calendar`;
+      localStorage.setItem("user", user); 
+      localStorage.setItem("id", user.id);
+    } else {
+      console.log("redirect");
+      localStorage.clear();
+      window.location.href = `/auth/login`;
+    }
+
+
     
     // localStorage.setItem("user", JSON.stringify(authenticated));
     // if(authenticated.isAdmin){

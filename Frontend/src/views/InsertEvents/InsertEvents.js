@@ -2,6 +2,7 @@ import React, { useState } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
+import AddAlert from "@material-ui/icons/AddAlert";
 // core components
 import Grid from '@material-ui/core/Grid';
 import GridItem from "components/Grid/GridItem.js";
@@ -15,12 +16,17 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
+import SnackbarContent from "components/Snackbar/SnackbarContent.js";
+import Snackbar from "components/Snackbar/Snackbar.js";
 import {
     MuiPickersUtilsProvider,
     KeyboardTimePicker,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import TextField from '@material-ui/core/TextField';
+
+
+
 const styles = {
     cardCategoryWhite: {
         color: "rgba(255,255,255,.62)",
@@ -46,6 +52,7 @@ export default function InsertEvents() {
     const classes = useStyles();
     const [selectedDateStart, setSelectedDateStart] = React.useState(new Date());
     const [selectedDateEnd, setSelectedDateEnd] = React.useState(new Date());
+    const [tl, setTL] = React.useState(false);
     const handleDateChangeStart = date => {
         setSelectedDateStart(date);
     };
@@ -53,6 +60,12 @@ export default function InsertEvents() {
         setSelectedDateEnd(date);
     };
     function saveEventHandler() {
+        if (!tl) {
+            setTL(true);
+            setTimeout(function() {
+              setTL(false);
+            }, 1200);
+          }
         const title = document.getElementById("title").value;
         const description = document.getElementById("description").value;
         const id = localStorage.getItem("id");
@@ -232,6 +245,15 @@ export default function InsertEvents() {
                         </CardFooter>
                     </Card>
                 </GridItem>
+                <Snackbar
+                  place="tr"
+                  color="info"
+                  icon={AddAlert}
+                  message="New event added in calendar!"
+                  open={tl}
+                  closeNotification={() => setTL(false)}
+                  close
+                />
             </GridContainer>
         </div>
     );

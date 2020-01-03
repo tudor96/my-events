@@ -18,7 +18,7 @@ import Search from "@material-ui/icons/Search";
 // core components
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
-
+import UserProfile from "UserProfile.js"
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 
 const useStyles = makeStyles(styles);
@@ -39,13 +39,16 @@ export default function AdminNavbarLinks() {
   };
   const handleClickProfile = event => {
     if (openProfile && openProfile.contains(event.target)) {
+      
       setOpenProfile(null);
     } else {
       setOpenProfile(event.currentTarget);
     }
   };
   const handleCloseProfile = () => {
+    UserProfile.setAuth(null);
     setOpenProfile(null);
+
   };
   return (
     <div>
@@ -193,19 +196,6 @@ export default function AdminNavbarLinks() {
               <Paper>
                 <ClickAwayListener onClickAway={handleCloseProfile}>
                   <MenuList role="menu">
-                    <MenuItem
-                      onClick={handleCloseProfile}
-                      className={classes.dropdownItem}
-                    >
-                      Profile
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseProfile}
-                      className={classes.dropdownItem}
-                    >
-                      Settings
-                    </MenuItem>
-                    <Divider light />
                     <MenuItem
                       onClick={handleCloseProfile}
                       className={classes.dropdownItem}

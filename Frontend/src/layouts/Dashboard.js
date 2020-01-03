@@ -48,38 +48,6 @@ const useStyles = makeStyles(styles);
 export default function Dashboard({ ...rest }) {
   // styles
 
-    React.useEffect(() => {
-        console.log("mqtt conection>!");
-        var mqtt = require('mqtt')
-        var client = mqtt.connect("mqtt://gjlwpmmb:wVA7ICcNkB_j@farmer-01.cloudmqtt.com:8080")
-        setTimeout(() => {
-          client.publish("presence", "Hello world!");
-        }, 1000);
-        client.on("message", (topic, payload) => {
-          // Log message
-          console.log(topic);
-          console.log(payload);
-          // Close the connection
-          client.end();
-        });
-        
-        client.on("connect",  () => {
-          client.subscribe("presence");
-          console.log("Connected to MQTT Broker.");
-        });
-        // client.on('connect', function () {
-        //     client.subscribe('presence', function (err) {
-        //     })
-        // })
-      
-        // client.on('message', function (topic, message) {
-        //     // message is Buffer
-        //     console.log(message.toString())
-        //     alert(message.toString())
-        //     client.end()
-        // })
-    }, []);
-
 
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
@@ -135,7 +103,7 @@ export default function Dashboard({ ...rest }) {
     <div className={classes.wrapper}>
       <Sidebar
         routes={filteredRoutes}
-        logoText={"Administration"}
+        logoText={"My-Events"}
         logo={logo}
         image={image}
         handleDrawerToggle={handleDrawerToggle}
