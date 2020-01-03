@@ -77,7 +77,7 @@ export default function LoginPage(props) {
       <Header
         absolute
         color="transparent"
-        brand="Online Voting System"
+        brand="My-Events"
       />
       <div
         className={classes.pageHeader}

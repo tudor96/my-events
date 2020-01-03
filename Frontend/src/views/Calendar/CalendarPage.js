@@ -72,8 +72,14 @@ function useFetch(url) {
         setLoading(false)
       })
       .catch((e) => {
+        let ev ={
+          "events": [],
+          "popup": []
+        }
+        console.log("final data", e);
+        setData(ev)
         console.warn(e.message)
-        setError('Error fetching data. Try again.')
+        setError(null)
         setLoading(false)
       })
   }, [url])

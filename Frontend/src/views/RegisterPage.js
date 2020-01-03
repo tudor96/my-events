@@ -77,7 +77,7 @@ export default function RegisterPage(props) {
       <Header
         absolute
         color="transparent"
-        brand="Online Voting System"
+        brand="My-Events"
       />
       <div
         className={classes.pageHeader}
