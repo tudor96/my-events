@@ -15,6 +15,7 @@
     "create-react-app": "^3.3.0",
     "date-fns": "^2.0.0-beta.5",
     "history": "4.9.0",
+    "mqttjs": "0.0.0",
     "perfect-scrollbar": "1.4.0",
     "prop-types": "15.7.2",
     "react": "16.9.0",

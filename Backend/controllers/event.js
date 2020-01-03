@@ -32,11 +32,11 @@ const insertEvent = async (req, res) => {
             })
         })
 
-        client.on('message', function (topic, message) {
-            // message is Buffer
-            console.log(message.toString())
-            client.end()
-        })
+        // client.on('message', function (topic, message) {
+        //     // message is Buffer
+        //     console.log(message.toString())
+        //     client.end()
+        // })
         res.status(200).send("inserted date");
     } catch (err) {
         res.status(400).json({

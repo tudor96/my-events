@@ -47,6 +47,26 @@ const useStyles = makeStyles(styles);
 
 export default function Dashboard({ ...rest }) {
   // styles
+
+    React.useEffect(() => {
+        console.log("mqtt conection>!");
+        var mqtt = require('mqtt')
+        var client = mqtt.connect("mqtt://gjlwpmmb:wVA7ICcNkB_j@farmer-01.cloudmqtt.com:10088")
+      
+        client.on('connect', function () {
+            client.subscribe('presence', function (err) {
+            })
+        })
+      
+        client.on('message', function (topic, message) {
+            // message is Buffer
+            console.log(message.toString())
+            alert(message.toString())
+            client.end()
+        })
+    }, []);
+
+
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
