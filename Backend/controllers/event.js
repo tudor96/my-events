@@ -24,14 +24,11 @@ const insertEvent = async (req, res) => {
         var mqtt = require('mqtt')
         var client = mqtt.connect("mqtt://gjlwpmmb:wVA7ICcNkB_j@farmer-01.cloudmqtt.com:10088")
 
-        client.on('connect', function () {
-            client.subscribe('presence', function (err) {
-                if (!err) {
-                    client.publish('presence', 'Hello mqtt')
-                }
-            })
-        })
-
+        client.on("connect",  () => {
+            client.subscribe("presence");
+            console.log("Connected to MQTT Broker.");
+          });
+        client.publish("presence", "Hello world!");
         // client.on('message', function (topic, message) {
         //     // message is Buffer
         //     console.log(message.toString())
