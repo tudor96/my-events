@@ -32,6 +32,7 @@ export default function LoginPage(props) {
     setCardAnimation("");
   }, 700);
   const classes = useStyles();
+  localStorage.clear();
   // const history = useHistory();
 
   // function handleClick() {

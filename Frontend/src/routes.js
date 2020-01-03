@@ -39,6 +39,7 @@ import RegisterPage from "views/RegisterPage";
 import LoginPage from "views/LoginPage";
 import CalendarPage from "views/Calendar/CalendarPage";
 import PollList from "views/PollList/PollList";
+import InsertEvents from "views/InsertEvents/InsertEvents";
 
 
 const dashboardRoutes = [
@@ -62,6 +63,13 @@ const dashboardRoutes = [
     name: "Calendar",
     icon: Calendar,
     component: CalendarPage,
+    layout: "/dashboard"
+  },  
+  {
+    path: "/addEvent",
+    name: "Add Event",
+    icon: Dashboard,
+    component: InsertEvents,
     layout: "/dashboard"
   },
  

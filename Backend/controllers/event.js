@@ -1,63 +1,80 @@
 let logging = require("../logging.js")
-const {Event, User} = require('../models')
+const { Event, User } = require('../models')
 const Sequelize = require('sequelize')
 // const bcrypt = require("bcrypt-nodejs");
 
 const insertEvent = async (req, res) => {
     try {
-    const id = req.params.id;
-      const {
-        title,
-        description,
-        startDate,
-        endDate
-      } = req.body;
-      const newEvent = await Event.create({
-        title,
-        description,
-        startDate,
-        endDate,
-        "UserId": id
-      });
-      res.status(200).send("inserted date");
-  
-    } catch (err) {
-      res.status(400).json({
-        error: err
-      });
-    }
-  }
-
-const getAllEvents = async (req, res) => {
         const id = req.params.id;
+        const {
+            title,
+            description,
+            startDate,
+            endDate
+        } = req.body;
+        const newEvent = await Event.create({
+            title,
+            description,
+            startDate,
+            endDate,
+            "UserId": id
+        });
         
 
-        User.findOne({
-            where: {
-                id: id
-            },
-            attributes: [
-                "id",
-                "email"
-            ],
-            include: [
-                {
-                    model: Event,
-                    as: 'events',
-                    attributes: ["title", "description", "startDate", "endDate"]
+        var mqtt = require('mqtt')
+        var client = mqtt.connect("mqtt://gjlwpmmb:wVA7ICcNkB_j@farmer-01.cloudmqtt.com:10088")
+
+        client.on('connect', function () {
+            client.subscribe('presence', function (err) {
+                if (!err) {
+                    client.publish('presence', 'Hello mqtt')
                 }
-            ]
+            })
+        })
 
-        }).then(event => {
-            logging.LOG( "Event " + event)
-            if (event !== null) {
-
-                res.status(200).send(event);
-            } else {
-                res.status(400).send("Event Doesn't Exist");
-            }
-
+        client.on('message', function (topic, message) {
+            // message is Buffer
+            console.log(message.toString())
+            client.end()
+        })
+        res.status(200).send("inserted date");
+    } catch (err) {
+        res.status(400).json({
+            error: err
         });
+    }
+}
+
+const getAllEvents = async (req, res) => {
+    const id = req.params.id;
+
+
+    User.findOne({
+        where: {
+            id: id
+        },
+        attributes: [
+            "id",
+            "email"
+        ],
+        include: [
+            {
+                model: Event,
+                as: 'events',
+                attributes: ["title", "description", "startDate", "endDate"]
+            }
+        ]
+
+    }).then(event => {
+        logging.LOG("Event " + event)
+        if (event !== null) {
+
+            res.status(200).send(event);
+        } else {
+            res.status(400).send("Event Doesn't Exist");
+        }
+
+    });
 
 
 }
@@ -118,9 +135,9 @@ const getAllEvents = async (req, res) => {
 //         allEvents.push(eventPresident,eventParliamentary,eventReferendum);
 //         if(allEvents.length == 0)
 //           throw "Event Doesn't Exist";
-        
+
 //         res.status(200).send(allEvents);
-        
+
 //     } catch (error) {
 //         res.status(400).send(error);
 //     }

@@ -22,7 +22,7 @@ const login = async (req, res) => {
 
   })
   let flag = false;
-  console.log("USER", user);
+  
   if (user !== null) {
     flag = await bcrypt.compare(password, user.password);
   }

@@ -19,6 +19,7 @@ var UserProfile = (function() {
 
   var setAuth = function(user){
     localStorage.setItem("user", user); 
+    localStorage.setItem("id", user.id);
     window.location.href = `/dashboard/calendar`;
     
     // localStorage.setItem("user", JSON.stringify(authenticated));

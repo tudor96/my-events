@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 // core components
+import Grid from '@material-ui/core/Grid';
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
@@ -12,11 +13,14 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-
-import avatar from "assets/img/faces/marc.jpg";
-import QuestionCard from "components/QuestionCard/QuestionCard";
-import QuestionList from "components/QuestionList/QuestionList";
-import axios from "axios";
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+    MuiPickersUtilsProvider,
+    KeyboardTimePicker,
+    KeyboardDatePicker,
+} from '@material-ui/pickers';
+import TextField from '@material-ui/core/TextField';
 const styles = {
     cardCategoryWhite: {
         color: "rgba(255,255,255,.62)",
@@ -33,81 +37,42 @@ const styles = {
         fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
         marginBottom: "3px",
         textDecoration: "none"
-    }
+    },
 };
 
 const useStyles = makeStyles(styles);
 
-export default function InsertPoll() {
-    const [questions, setQuestions] = useState([{ "id": 1, "name": "", "options": [], "editState":true }]);
+export default function InsertEvents() {
     const classes = useStyles();
-
-    function addQuestionHandler() {
-        // let newQuestions = questions;
-        let newId = questions[questions.length - 1].id + 1;
-        // questions.push({"id":newId,"name":"", "options": []});
-        setQuestions([...questions, { "id": newId, "name": "", "options": [], "editState":true }]);
-        console.log("questions", questions);
-    }
-
-    function saveQuestionHandler(id, question) {
-        console.log("saveQuestionHandler:::", id, question)
-        let newQuestionsState = questions.map((stateQ, index)=>{
-            if (index === id-1) {
-                stateQ.name = question.name;
-                stateQ.options = question.options;
-                stateQ.editState = false;
-            }
-            return stateQ;
-        })
-        console.log(newQuestionsState);
-        setQuestions(newQuestionsState);
-        // props.questions[id-1].editState = false;
-    }
-
-    function editFunctionHandler(id) {
-        console.log("editFunctionHandler:::", id)
-        let newQuestionsState = questions.map((stateQ, index)=>{
-            if (index === id-1) {
-                stateQ.editState = true;
-            }
-            return stateQ;
-        })
-        console.log(newQuestionsState);
-        setQuestions(newQuestionsState);
-        // props.questions[id-1].editState = false;
-    }
-
-    function savePoll() {
-        let url = 'http://localhost:4010/api/v1.0/platform/election';
-        let saveQuestionState = questions.map((stateQ, index)=>{
-            let saveQuestion = {
-                "name" : stateQ.name,
-                "options": stateQ.options
-            }
-            return saveQuestion;
-        })
-        axios.post(url, {
-            "name": document.getElementById("poll-name").value,
-            "description": document.getElementById("poll-description").value,
-            "startDate": document.getElementById("poll-start-date").value,
-            "endDate": document.getElementById("poll-end-date").value,
-            "questions": saveQuestionState
-          }, {
-            headers: {
-                'x-user-cnp': 'asd',
-            },
-            withCredentials : true
+    const [selectedDateStart, setSelectedDateStart] = React.useState(new Date());
+    const [selectedDateEnd, setSelectedDateEnd] = React.useState(new Date());
+    const handleDateChangeStart = date => {
+        setSelectedDateStart(date);
+    };
+    const handleDateChangeEnd = date => {
+        setSelectedDateEnd(date);
+    };
+    function saveEventHandler() {
+        const title = document.getElementById("title").value;
+        const description = document.getElementById("description").value;
+        const id = localStorage.getItem("id");
+        const payload = {
+            "title": title,
+            "description":description,
+            "startDate": selectedDateStart,
+            "endDate": selectedDateEnd
+        }
+        fetch("https://my-events-pssc.herokuapp.com/api/event/insertEvent/"+id, {
+            method: 'post',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
           })
-          .then(function (response) {
-
-            alert("Poll Saved!");
+          .then(response => response.json())
+          .then((response) => {
           })
-          .catch(function (error) {
-            console.log(error);
-            alert("Faild to save poll!");
-          });
+          .catch(err => console.log(err))
     }
+
     // React.useEffect(() => {
     //     console.log("rerendering>!");
     // }, [questions]);
@@ -120,15 +85,14 @@ export default function InsertPoll() {
                 <GridItem xs={12} sm={12} md={10}>
                     <Card>
                         <CardHeader color="primary">
-                            <h4 className={classes.cardTitleWhite}>Add poll</h4>
-                            <p className={classes.cardCategoryWhite}>Create new poll.</p>
+                            <h4 className={classes.cardTitleWhite}>Add new event on your personal calendar</h4>
                         </CardHeader>
                         <CardBody>
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
-                                        labelText="Poll Name:"
-                                        id="poll-name"
+                                        labelText="Title"
+                                        id="title"
                                         formControlProps={{
                                             fullWidth: true
                                         }}
@@ -140,10 +104,10 @@ export default function InsertPoll() {
                             </GridContainer>
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={12}>
-                                    <InputLabel style={{ color: "#AAAAAA" }}>Description</InputLabel>
+
                                     <CustomInput
-                                        labelText="Short poll description"
-                                        id="poll-description"
+                                        labelText="Short description for your event"
+                                        id="description"
                                         formControlProps={{
                                             fullWidth: true
                                         }}
@@ -155,33 +119,65 @@ export default function InsertPoll() {
                                 </GridItem>
                             </GridContainer>
                             <GridContainer>
-                                <GridItem xs={12} sm={12} md={6}>
-                                    <CustomInput
-                                        labelText="Start Date"
-                                        id="poll-start-date"
-                                        formControlProps={{
-                                            fullWidth: true
-                                        }}
-                                    />
+                                <GridItem xs={12} sm={12} md={12}>
+                                <InputLabel style={{ color: "#AAAAAA" }}>Start Date</InputLabel>
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <Grid container justify="space-around">
+                                            <KeyboardDatePicker
+                                                margin="normal"
+                                                id="date-picker-dialog-start"
+                                                label="Date picker dialog"
+                                                format="MM/dd/yyyy"
+                                                value={selectedDateStart}
+                                                onChange={handleDateChangeStart}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change date',
+                                                }}
+                                            />
+                                            <KeyboardTimePicker
+                                                margin="normal"
+                                                id="time-picker-start"
+                                                label="Time picker"
+                                                value={selectedDateStart}
+                                                onChange={handleDateChangeStart}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change time',
+                                                }}
+                                            />
+                                        </Grid>
+                                    </MuiPickersUtilsProvider>
                                 </GridItem>
-                                <GridItem xs={12} sm={12} md={6}>
-                                    <CustomInput
-                                        labelText="End Date"
-                                        id="poll-end-date"
-                                        formControlProps={{
-                                            fullWidth: true
-                                        }}
-                                    />
+                                <GridItem xs={12} sm={12} md={12}>
+                                <InputLabel style={{ color: "#AAAAAA" }}>End Date</InputLabel>
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <Grid container justify="space-around">
+                                            <KeyboardDatePicker
+                                                margin="normal"
+                                                id="date-picker-dialog-end"
+                                                label="Date picker dialog"
+                                                format="MM/dd/yyyy"
+                                                value={selectedDateEnd}
+                                                onChange={handleDateChangeEnd}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change date',
+                                                }}
+                                            />
+                                            <KeyboardTimePicker
+                                                margin="normal"
+                                                id="time-picker-end"
+                                                label="Time picker"
+                                                value={selectedDateEnd}
+                                                onChange={handleDateChangeEnd}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change time',
+                                                }}
+                                            />
+                                        </Grid>
+                                    </MuiPickersUtilsProvider>
                                 </GridItem>
                             </GridContainer>
-                            <QuestionList questions={questions} saveQuestionHandler = {saveQuestionHandler}
-                                        editFunctionHandler = {editFunctionHandler}
-                                        ></QuestionList>
-                            <GridContainer>
-                                <GridItem xs={12} sm={12} md={9}></GridItem>
-                                <GridItem xs={12} sm={12} md={2}><Button color="primary" onClick={addQuestionHandler}>Add Question</Button></GridItem>
 
-                            </GridContainer>
+
                             {/* <GridContainer>
                                 <GridItem xs={12} sm={12} md={4}>
                                     <CustomInput
@@ -232,7 +228,7 @@ export default function InsertPoll() {
 
                         <CardFooter>
 
-                            <Button color="primary" onClick= {savePoll}>Save Poll</Button>
+                            <Button color="primary" onClick={saveEventHandler}>Add Event</Button>
                         </CardFooter>
                     </Card>
                 </GridItem>
