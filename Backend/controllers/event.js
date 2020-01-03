@@ -37,13 +37,14 @@ const getAllEvents = async (req, res) => {
                 id: id
             },
             attributes: [
+                "id",
                 "email"
             ],
             include: [
                 {
                     model: Event,
                     as: 'events',
-                    attributes: ["title", "description", "date"]
+                    attributes: ["title", "description", "startDate", "endDate"]
                 }
             ]
 
