@@ -10,7 +10,6 @@ const config = require('./Backend/config/config.js')
 const cors = require('cors')
 var logging = require(__dirname + "/Backend/logging.js")
 var serverAPIs = require(__dirname + "/Backend/serverAPIs.js")
-var serverMQTT = require(__dirname + "/Backend/herokuCloudMQTT.js")
 
 const PORT = config.port
 
