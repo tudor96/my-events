@@ -9,12 +9,14 @@ const insertEvent = async (req, res) => {
       const {
         title,
         description,
-        date,
+        startDate,
+        endDate
       } = req.body;
       const newEvent = await Event.create({
         title,
         description,
-        date,
+        startDate,
+        endDate,
         "UserId": id
       });
       res.status(200).send("inserted date");

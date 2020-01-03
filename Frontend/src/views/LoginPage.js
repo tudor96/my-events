@@ -42,7 +42,7 @@ export default function LoginPage(props) {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     const payload = {email: email,password:password}
-    const url = "http://localhost:5000/api/user/login";
+    const url = "https://my-events-pssc.herokuapp.com/api/user/login";
 
     fetch(url, {
       method: 'post',
