@@ -51,7 +51,10 @@ export default function Dashboard({ ...rest }) {
     React.useEffect(() => {
         console.log("mqtt conection>!");
         var mqtt = require('mqtt')
-        var client = mqtt.connect("mqtt://gjlwpmmb:wVA7ICcNkB_j@farmer-01.cloudmqtt.com:10088")
+        var client = mqtt.connect("mqtt://gjlwpmmb:wVA7ICcNkB_j@farmer-01.cloudmqtt.com:30088")
+        setTimeout(() => {
+          client.publish("presence", "Hello world!");
+        }, 1000);
         client.on("message", (topic, payload) => {
           // Log message
           console.log(topic);
