@@ -1,5 +1,5 @@
 {
-  "name": "lhotels",
+  "name": "my-events",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -36,6 +36,6 @@
     "test": "nyc --reporter=text mocha --timeout 10000",
     "start": "nodemon index.js"
   },
-  "author": "Bogdan Falk",
+  "author": "Golcea Tudor",
   "license": "ISC"
 }

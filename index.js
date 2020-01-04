@@ -32,6 +32,11 @@ app.use(cors());
     controllers_path: path.join(__dirname, '/Backend/controllers')
   })
 
+  app.use(express.static(path.join(__dirname, 'Frontend/build')));
+app.get('/*', function(req, res) {
+  res.sendFile(path.join(__dirname, 'Frontend/build', 'index.html'));
+});
+
 
 sequelize.sync({ logging: false } ) // { force: true } - To reset DB insert this inside the parenthesis
   .then(() => {
@@ -45,9 +50,7 @@ logging.GOD(`my-events server started on port:${PORT}`)
 
 
 app.use(express.json());
-// app.use(serveStatic(__dirname + "/Frontend/dist"));
 
-
-serverAPIs.getContacts(app)
+console.log("static")
 // serverDB.connectToDB()
 module.exports = app;
